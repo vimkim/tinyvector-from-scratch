@@ -20,6 +20,19 @@ jobs:
           override: true
           components: rustfmt, clippy
 
+      # Step 3: Set up sccache to speed up subsequent builds
+      - name: Set up sccache
+        uses: mozilla-actions/sccache-action@v0.0.5
+
+      # Step 4: Check code formatting with rustfmt
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      # Step 5: Run Clippy for linting
+      - name: Run Clippy
+        run: cargo clippy --all-features --all-targets -- -D warnings  # Treat warnings as errors
+
+      # Step 6: Run cargo check to ensure the code compiles
       - name: Run cargo check
         uses: actions-rs/cargo@v1
         with:
